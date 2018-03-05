@@ -32,13 +32,13 @@ local function getScriptDir(source) --requires: cut
 	if source == nil then
 		source = debug.getinfo(1).source
 	end
-	local pwd = ""
-	local pwd1 = (io.popen("echo %cd%"):read("*l")):gsub("\\","/")
-	local pwd2 = source:sub(2):gsub("\\","/")
-	if pwd2:sub(2,3) == ":/" then
+	local pwd = "/"
+	local pwd1 = io.popen("pwd"):read("*l")
+	local pwd2 = source:sub(2)
+	if pwd2:sub(1,1) == "/" then
 		pwd = pwd2:sub(1,pwd2:find("[^/]*%.lua")-1)
 	else
-		local path1 = cut(pwd1:sub(4),"/")
+		local path1 = cut(pwd1:sub(2),"/")
 		local path2 = cut(pwd2,"/")
 		for i = 1,#path2-1 do
 			if path2[i] == ".." then
@@ -47,7 +47,6 @@ local function getScriptDir(source) --requires: cut
 				table.insert(path1,path2[i])
 			end
 		end
-		pwd = pwd1:sub(1,3)
 		for i = 1,#path1 do
 			pwd = pwd..path1[i].."/"
 		end
@@ -55,18 +54,17 @@ local function getScriptDir(source) --requires: cut
 	return pwd
 end
 
-local rootpath,cut,getScriptDir = getScriptDir(),nil,nil
-local rootpathwin = rootpath:gsub('/','\\')
+rootpath,cut,getScriptDir = getScriptDir(),nil,nil
 
-for filename in io.popen("dir /b \""..rootpathwin.."modules\\*.lua\""):lines() do
-	xpcall(loadfile(rootpath.."modules/"..filename),parseError)
+for filepath in io.popen('ls -1 '..rootpath..'modules/*.lua'):lines() do
+	xpcall(loadfile(filepath),parseError)
 end
 
---------------------------------------
+--------------------------------
 
 function buildwordgenmechanics()
 	local lettermechanics = {}
-	for filename in io.popen("dir /b \""..rootpathwin.."dictionnaries\""):lines() do
+	for filename in io.popen("ls -p "..rootpath..'dictionnaries | grep -v /'):lines() do
 		print('Reading "'..filename..'" dictionnary...')
 		local language = filename:sub(1,filename:find('%.')-1)
 		if lettermechanics[language] == nil then
