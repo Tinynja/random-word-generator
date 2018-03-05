@@ -52,15 +52,15 @@ function string.byte(s,i,j)
 end
  
 function string.cut(s,pattern,delpattern,i)
-  if type(s) ~= "string" then error("bad argument #1 to 'string.cut' (string expected, got "..type(t)..")") end
-  if type(pattern) ~= "string" then error("bad argument #2 to 'string.cut' (string expected, got "..type(t)..")") end
+	if type(s) ~= "string" then error("bad argument #1 to 'string.cut' (string expected, got "..type(t)..")") end
+	if type(pattern) ~= "string" then error("bad argument #2 to 'string.cut' (string expected, got "..type(t)..")") end
 	local i2,i3 = 0,0
 	delpattern = delpattern or true
 	if tonumber(i) ~= nil then i2,i3 = i-1,i-1 end
 	local cutstring = {}
 	repeat
 		local i1 = i3
-    i2,i3 = s:find(pattern,i1+1)
+		i2,i3 = s:find(pattern,i1+1)
 		if i2 == nil then i2 = s:len()+1 end
 		if delpattern then
 			table.insert(cutstring,s:sub(i1+1,i2-1))
@@ -68,11 +68,11 @@ function string.cut(s,pattern,delpattern,i)
 			table.insert(cutstring,s:sub(i1,i2-1))
 		end
 	until i2 == s:len()+1
-  return cutstring
+	return cutstring
 end
 
 function alphabetical(s1,s2,returnstring) --need to add ability to sort negative numbers
-  if not (type(s1) == "string" or type(s1) == "number") then error("bad argument #1 to 'alphabetical' (string expected, got "..type(s1)..")") end
+	if not (type(s1) == "string" or type(s1) == "number") then error("bad argument #1 to 'alphabetical' (string expected, got "..type(s1)..")") end
 	if not (type(s2) == "string" or type(s2) == "number") then error("bad argument #2 to 'alphabetical' (string expected, got "..type(s2)..")") end
 	local t,f = 0,0 -- true,false
 	if returnstring then t,f = s1,s2
@@ -117,7 +117,7 @@ function table.shift(t,n)
 end
 
 function table.find(t,value,kv)
-  if type(t) ~= "table" then error("bad argument #1 to 'table.find' (table expected, got "..type(t)..")") end
+	if type(t) ~= "table" then error("bad argument #1 to 'table.find' (table expected, got "..type(t)..")") end
 	if type(value) == nil then error("bad argument #2 to 'table.find' (value expected, got "..type(value)..")") end
 	if type(kv) ~= "string" or #kv ~= 1 or not kv:match('[kv]') then kv = 'v' end
 	local indexes,subtables = {},{}
@@ -148,9 +148,9 @@ function clear()
 	print()
 end
 
-function sleep(n)  -- seconds
+function sleep(n)	-- seconds
 	local start = os.clock()
-  while os.clock()-start <= n do end
+	while os.clock()-start <= n do end
 end
 
 function orderedPairs(t)

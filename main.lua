@@ -9,15 +9,15 @@ local function parseError(msg)
 end
 
 local function cut(s,pattern,delpattern,i)
-  if type(s) ~= "string" then error("bad argument #1 to 'string.cut' (string expected, got "..type(t)..")") end
-  if type(pattern) ~= "string" then error("bad argument #2 to 'string.cut' (string expected, got "..type(t)..")") end
+	if type(s) ~= "string" then error("bad argument #1 to 'string.cut' (string expected, got "..type(t)..")") end
+	if type(pattern) ~= "string" then error("bad argument #2 to 'string.cut' (string expected, got "..type(t)..")") end
 	local i2 = 0
 	if delpattern == nil then delpattern = true end
 	if tonumber(i) ~= nil then i2 = i-1 end
 	local cutstring = {}
 	repeat
 		local i1 = i2
-    i2 = s:find(pattern,i1+1)
+		i2 = s:find(pattern,i1+1)
 		if i2 == nil then i2 = s:len()+1 end
 		if delpattern then
 			table.insert(cutstring,s:sub(i1+1,i2-1))
@@ -25,7 +25,7 @@ local function cut(s,pattern,delpattern,i)
 			table.insert(cutstring,s:sub(i1,i2-1))
 		end
 	until i2 == s:len()+1
-  return cutstring
+	return cutstring
 end
 
 local function getScriptDir(source) --requires: cut
@@ -338,7 +338,7 @@ repeat
 		until input == '0'
 		input = nil
 	elseif input == '4' then
-		io.write('\nThis script reads the dictionnaries of words provided in the "dictionnaries" folder and analyzes how every word is constructed in two different ways:\n  Follow: Checks for the probability of a letter coming right after another letter\n  Precede: Checks for the probability of a letter coming right after another letter when it is preceded by a specific letter\n  Random: All letters have the same proabability of being generated\n~ Press enter to go back... ')
+		io.write('\nThis script reads the dictionnaries of words provided in the "dictionnaries" folder and analyzes how every word is constructed in two different ways:\n	Follow: Checks for the probability of a letter coming right after another letter\n	Precede: Checks for the probability of a letter coming right after another letter when it is preceded by a specific letter\n	Random: All letters have the same proabability of being generated\n~ Press enter to go back... ')
 		io.read()
 	end
 until input == '0'

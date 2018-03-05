@@ -8,8 +8,8 @@ function getScriptDir(source) --requires: string.cut
 	if pwd2:sub(2,3) == ":/" then
 		pwd = pwd2:sub(1,pwd2:find("[^/]*%.lua")-1)
 	else
-		local path1 = cut(pwd1:sub(4),"/")
-		local path2 = cut(pwd2,"/")
+		local path1 = string.cut(pwd1:sub(4),"/")
+		local path2 = string.cut(pwd2,"/")
 		for i = 1,#path2-1 do
 			if path2[i] == ".." then
 				table.remove(path1)
