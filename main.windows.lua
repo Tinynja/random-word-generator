@@ -208,7 +208,7 @@ function generateword(len,lang,method,firstletter)
 end
 
 lettermechanics = buildwordgenmechanics()
-local language,minlen,maxlen,wordgenmethod,maxattempts = 'english',6,12,'001',2000
+local language,minlen,maxlen,wordgenmethod,maxattempts = 'english',6,12,'111',500
 
 repeat
 	clear()
