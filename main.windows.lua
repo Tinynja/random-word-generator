@@ -232,7 +232,7 @@ repeat
 				print('Precede: '..words[3])
 			end
 			print()
-			io.write('~ Word length (0 to stop): ')
+			io.write('~ Word length (0 to go back): ')
 			input = io.read()
 		until input == '0'
 		input = nil
@@ -278,7 +278,7 @@ repeat
 					print('Precede: '..savedi[3]/n..' attempt'..string.sub('s',1,math.ceil(savedi[3]/n)-1))
 				end
 			end
-			io.write('\nAmount and length of words to find (amount,length): ')
+			io.write('\nAmount and length of words to find (amount,length)(0 to go back): ')
 			inputs = string.cut(io.read(),', *')
 			if tonumber(inputs[1]) and tonumber(inputs[1]) >= 0 then
 				n = tonumber(inputs[1])
