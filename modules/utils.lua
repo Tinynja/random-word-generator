@@ -1,6 +1,3 @@
-if utils then io.write("Reloaded utils.lua.\n") end
-utils = true
-
 function toboolean(v)
 	if type(v) == "boolean" then
 		return v
@@ -22,7 +19,7 @@ function tobits(n)
 	return table.concat(t)
 end
 
-if _tostring == nil then _tostring = tostring end
+_tostring = _tostring or tostring
 function tostring(...)
 	local args = {table.unpack({...})}
 	local strings = {_tostring(args[1])}
@@ -32,7 +29,7 @@ function tostring(...)
 	return table.unpack(strings)
 end
 
-if _tonumber == nil then _tonumber = tonumber end
+_tonumber = _tonumber or tonumber
 function tonumber(...)
 	local args = {table.unpack({...})}
 	local numbers = {_tonumber(args[1])}
@@ -42,7 +39,7 @@ function tonumber(...)
 	return table.unpack(numbers)
 end
 
-if string._byte == nil then string._byte = string.byte end
+string._byte = string._byte or string.byte
 function string.byte(s,i,j)
 	local ascii = {string._byte(s,i,j)}
 	if ascii[1] == nil then
@@ -140,10 +137,10 @@ end
 function table.index(t,chainkey)
 end
 
-function clear()
+function cls()
 	print()
 	for i = 1,10 do
-		print('~')
+		print('.')
 	end
 	print()
 end

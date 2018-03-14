@@ -1,70 +1,16 @@
-local function parseError(msg)
-	if msg:match("exit") or msg:match("interrupted!") then
-		return true
-	elseif not msg:match("reload") then
-		print(msg)
-	end
-	io.write("\n")
-	return false
-end
+local tempwd = debug.getinfo(1).source:sub(2):match('.*/') or ''
+tempwd = tempwd..'/'
 
-local function cut(s,pattern,delpattern,i)
-	if type(s) ~= "string" then error("bad argument #1 to 'string.cut' (string expected, got "..type(t)..")") end
-	if type(pattern) ~= "string" then error("bad argument #2 to 'string.cut' (string expected, got "..type(t)..")") end
-	local i2 = 0
-	if delpattern == nil then delpattern = true end
-	if tonumber(i) ~= nil then i2 = i-1 end
-	local cutstring = {}
-	repeat
-		local i1 = i2
-		i2 = s:find(pattern,i1+1)
-		if i2 == nil then i2 = s:len()+1 end
-		if delpattern then
-			table.insert(cutstring,s:sub(i1+1,i2-1))
-		else
-			table.insert(cutstring,s:sub(i1,i2-1))
-		end
-	until i2 == s:len()+1
-	return cutstring
-end
-
-local function getScriptDir(source) --requires: cut
-	if source == nil then
-		source = debug.getinfo(1).source
-	end
-	local pwd = "/"
-	local pwd1 = io.popen("pwd"):read("*l")
-	local pwd2 = source:sub(2)
-	if pwd2:sub(1,1) == "/" then
-		pwd = pwd2:sub(1,pwd2:find("[^/]*%.lua")-1)
-	else
-		local path1 = cut(pwd1:sub(2),"/")
-		local path2 = cut(pwd2,"/")
-		for i = 1,#path2-1 do
-			if path2[i] == ".." then
-				table.remove(path1)
-			else
-				table.insert(path1,path2[i])
-			end
-		end
-		for i = 1,#path1 do
-			pwd = pwd..path1[i].."/"
-		end
-	end
-	return pwd
-end
-
-rootpath,cut,getScriptDir = getScriptDir(),nil,nil
-
-for filepath in io.popen('ls -1 '..rootpath..'modules/*.lua'):lines() do
-	xpcall(loadfile(filepath),parseError)
-end
+require(tempwd..'modules/utils')
+fs = require(tempwd..'modules/filesystem')
 
 --------------------------------
 
-function buildwordgenmechanics()
+rootpath = fs.getscriptdir(debug.getinfo(1).source)
+
+local function buildwordgenmechanics()
 	local lettermechanics = {}
-	for filename in io.popen("ls -p "..rootpath..'dictionnaries | grep -v /'):lines() do
+	for filename in fs.listfiles(rootpath.."dictionnaries") do
 		print('Reading "'..filename..'" dictionnary...')
 		local language = filename:sub(1,filename:find('%.')-1)
 		if lettermechanics[language] == nil then
@@ -157,7 +103,7 @@ function buildwordgenmechanics()
 	return lettermechanics
 end
 
-function generateword(len,lang,method,firstletter)
+local function generateword(len,lang,method,firstletter)
 	method = method or '111'
 	firstletter = firstletter or string.char(math.random(97,122))
 	local words = {}
@@ -206,10 +152,10 @@ function generateword(len,lang,method,firstletter)
 end
 
 lettermechanics = buildwordgenmechanics()
-local language,minlen,maxlen,wordgenmethod,maxattempts = 'english',6,12,'001',2000
+local language,minlen,maxlen,wordgenmethod,maxattempts = 'english',6,12,'111',500
 
 repeat
-	clear()
+	cls()
 	io.write('0.Stop script\n1.Generate random words\n2.Test word generation methods\n3.Settings\n4.Explanation\n\n~ Choice: ')
 	local input = io.read()
 	if input == '1' then
@@ -230,7 +176,7 @@ repeat
 				print('Precede: '..words[3])
 			end
 			print()
-			io.write('~ Word length (0 to stop): ')
+			io.write('~ Word length (0 to go back): ')
 			input = io.read()
 		until input == '0'
 		input = nil
@@ -276,7 +222,7 @@ repeat
 					print('Precede: '..savedi[3]/n..' attempt'..string.sub('s',1,math.ceil(savedi[3]/n)-1))
 				end
 			end
-			io.write('\nAmount and length of words to find (amount,length): ')
+			io.write('\n~ Amount and length of words to find (amount,length)(0 to go back): ')
 			inputs = string.cut(io.read(),', *')
 			if tonumber(inputs[1]) and tonumber(inputs[1]) >= 0 then
 				n = tonumber(inputs[1])
@@ -288,7 +234,7 @@ repeat
 		input = nil
 	elseif input == '3' then
 		repeat
-			clear()
+			cls()
 			io.write('0.Back to menu\n1.Words language: '..language..'\n2.Minimum/maximum word length: '..minlen..'-'..maxlen..'\n3.Word generation method ([random][following][preceding]): '..wordgenmethod..'\n4.Maximum amount of attempts: '..maxattempts..'\n5.Rebuild word generation mechanics\n\n~ Choice: ')
 			input = io.read()
 			if input == '1' then
