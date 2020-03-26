@@ -2,7 +2,7 @@ local filesystem = {}
 
 if io.popen('ver'):read('a'):lower():match('windows') then
 
-	function filesystem.getscriptdir(source)
+	function filesystem.getscriptdir(source) --requires: string.cut
 		if source == nil then
 			source = debug.getinfo(1).source
 		end
@@ -30,9 +30,9 @@ if io.popen('ver'):read('a'):lower():match('windows') then
 	end
 
 	function filesystem.listfiles(path)
-		local filelist = '_notafile\n'..io.popen('dir /b "'..path:gsub('/','\\')..'"'):read('a')
+		local filelist = '\n_notafile\n'..io.popen('dir /b "'..path:gsub('/','\\')..'"'):read('a')
 		local function func(s, var)
-			local i = select(2,s:find(var))+2
+			local i = select(2,s:find('\n'..var))+2
 			if s:find('\n',i) then
 				return s:sub(i,s:find('\n',i)-1)
 			else
@@ -44,7 +44,7 @@ if io.popen('ver'):read('a'):lower():match('windows') then
 
 elseif io.popen('cat /etc/*-release | grep -oim 1 linux'):read('a'):lower():match('linux') then
 
-	function filesystem.getscriptdir(source)
+	function filesystem.getscriptdir(source) --requires: string.cut
 		if source == nil then
 			source = debug.getinfo(1).source
 		end
@@ -71,9 +71,9 @@ elseif io.popen('cat /etc/*-release | grep -oim 1 linux'):read('a'):lower():matc
 	end
 
 	function filesystem.listfiles(path)
-		local filelist = '_notafile\n'..io.popen('ls -1 '..path):read('a')
+		local filelist = '\n_notafile\n'..io.popen('ls -1 '..path):read('a')
 		local function func(s, var)
-			local i = select(2,s:find(var))+2
+			local i = select(2,s:find('\n'..var))+2
 			if s:find('\n',i) then
 				return s:sub(i,s:find('\n',i)-1):gsub('.*/','')
 			else
